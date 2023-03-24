@@ -1,0 +1,136 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISBN Barcode Scanner Sample</title>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@9.4.0-iv11082320/dist/dbr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.3.1/dist/dce.js"></script>
+    <style>
+      .scanner {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .scanner.active {
+        display: block;
+      }
+
+      .app {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: calc(100% - 40px);
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .inputContainer {
+        display: flex;
+        justify-content: space-between;
+        height: 30px;
+        width: 100%;
+        padding-bottom: 1em;
+      }
+
+      .barcodeInput {
+        width: 60%;
+      }
+
+      .scanButton {
+        width: 20%;
+      }
+
+      .insertButton {
+        width: 20%;
+      }
+
+      .fullwidth {
+        width: 100%;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      table, th, td {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h2>ISBN Barcode Scanner</h2>
+      <div class="inputContainer">
+        <input type="text" class="barcodeInput"/>
+        <button class="scanButton">Scan</button>
+        <button class="insertButton">Insert</button>
+      </div>
+      <div class="resultContainer fullwidth">
+        <table class="results fullwidth">
+          <tr>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+          </tr>
+        </table>
+      </div>
+      <div class="scanner">
+      </div>
+    </div>
+    <script>
+      let reader;
+      let enhancer;
+
+      window.onload = function() {
+        init();
+        document.getElementsByClassName("scanButton")[0].addEventListener("click",function(){
+          startScan();
+        });
+      }
+
+      function startScan(){
+        document.getElementsByClassName("scanner")[0].classList.add("active");
+        enhancer.open(true);
+      }
+
+      function stopScan(){
+        enhancer.close(true);
+        document.getElementsByClassName("scanner")[0].classList.remove("active");
+      }
+
+      async function init(){
+        reader = await Dynamsoft.DBR.BarcodeScanner.createInstance();
+        enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+        await enhancer.setUIElement(Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL);
+        let container = document.getElementsByClassName("scanner")[0];
+        container.appendChild(enhancer.getUIElement());
+        document.getElementsByClassName("dce-btn-close")[0].onclick = function () {
+          stopScan();
+        };
+      }
+
+      async function useEAN13Template() {
+        await scanner.initRuntimeSettingsWithString(`{
+  "FormatSpecification": {
+    "EnableAddOnCode": 1,
+    "Name": "defaultFormatParameterForAllBarcodeFormat",
+  },
+  "ImageParameter": {
+    "BarcodeFormatIds": ["BF_EAN13"],
+    "BarcodeFormatIds_2": ["BF2_NULL"],
+    "ExpectedBarcodesCount": 0,
+    "FormatSpecificationNameArray": [
+      "defaultFormatParameterForAllBarcodeFormat"
+    ],
+    "Name": "default",
+    "Timeout": 10000
+  },
+  "Version": "3.0"
+  }`);
+      };
+    </script>
+  </body>
+</html>
