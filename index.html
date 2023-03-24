@@ -21,10 +21,13 @@
       .app {
         display: flex;
         flex-direction: column;
-        align-items: center;
         width: calc(100% - 40px);
         padding-left: 20px;
         padding-right: 20px;
+      }
+
+      .title {
+        align-self: center;
       }
 
       .inputContainer {
@@ -62,7 +65,7 @@
   </head>
   <body>
     <div class="app">
-      <h2>ISBN Barcode Scanner</h2>
+      <h2 class="title">ISBN Barcode Scanner</h2>
       <div class="inputContainer">
         <input type="text" class="barcodeInput"/>
         <button class="scanButton">Scan</button>
@@ -78,8 +81,11 @@
           </tr>
         </table>
       </div>
-      <div class="scanner">
+      <div>
+        <div>Total: <span id="total"></span></div>
+        <button class="downloadButton">Download CSV</button>
       </div>
+      <div class="scanner"></div>
     </div>
     <script>
       let reader;
