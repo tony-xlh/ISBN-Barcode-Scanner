@@ -103,6 +103,7 @@
 
       async function init(){
         reader = await Dynamsoft.DBR.BarcodeScanner.createInstance();
+        await useEAN13Template();
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
         await enhancer.setUIElement(Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL);
         setScanRegion();
@@ -124,7 +125,7 @@
       }
 
       async function useEAN13Template() {
-        await scanner.initRuntimeSettingsWithString(`{
+        await reader.initRuntimeSettingsWithString(`{
   "FormatSpecification": {
     "EnableAddOnCode": 1,
     "Name": "defaultFormatParameterForAllBarcodeFormat",
