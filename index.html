@@ -92,6 +92,7 @@
       let enhancer;
       let interval;
       let processing = false;
+      const priceColumnIndex = 3;
 
       window.onload = function() {
         init();
@@ -99,7 +100,9 @@
           startScan();
         });
         document.getElementsByClassName("insertButton")[0].addEventListener("click",function(){
-          insert();
+          let barcodeText = document.getElementsByClassName("barcodeInput")[0].value;
+          insert(barcodeText);
+          calculateTotalPrice();
         });
       }
 
@@ -195,8 +198,7 @@
         }
       };
 
-      function insert() {
-        let barcodeText = document.getElementsByClassName("barcodeInput")[0].value;
+      function insert(barcodeText) {
         if (barcodeText) {
           let table = document.getElementsByClassName("results")[0];
           let tr = document.createElement("tr");
@@ -224,6 +226,20 @@
         price = price / 100;
         return price;
       }
+
+      function calculateTotalPrice(){
+        let table = document.getElementsByClassName("results")[0];
+        let rows = table.getElementsByTagName("tr");
+        let total = 0;
+        for (let index = 1; index < rows.length; index++) {
+          const row = rows[index];
+          const cells = row.getElementsByTagName("td");
+          const price = parseFloat(cells[priceColumnIndex].innerText);
+          total = total + price;
+        }
+        document.getElementById("total").innerText = total;
+      }
+
     </script>
   </body>
 </html>
