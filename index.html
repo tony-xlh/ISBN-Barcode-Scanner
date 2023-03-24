@@ -105,11 +105,22 @@
         reader = await Dynamsoft.DBR.BarcodeScanner.createInstance();
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
         await enhancer.setUIElement(Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL);
+        setScanRegion();
         let container = document.getElementsByClassName("scanner")[0];
         container.appendChild(enhancer.getUIElement());
         document.getElementsByClassName("dce-btn-close")[0].onclick = function () {
           stopScan();
         };
+      }
+
+      function setScanRegion(){
+        enhancer.setScanRegion({
+          regionLeft:0,
+          regionTop:25,
+          regionRight:100,
+          regionBottom:55,
+          regionMeasuredByPercentage: 1
+        });
       }
 
       async function useEAN13Template() {
