@@ -76,7 +76,6 @@
           <tr>
             <th>ISBN</th>
             <th>Title</th>
-            <th>Author</th>
             <th>Price</th>
           </tr>
         </table>
@@ -92,16 +91,16 @@
       let enhancer;
       let interval;
       let processing = false;
-      const priceColumnIndex = 3;
+      const priceColumnIndex = 2;
 
       window.onload = function() {
         init();
         document.getElementsByClassName("scanButton")[0].addEventListener("click",function(){
           startScan();
         });
-        document.getElementsByClassName("insertButton")[0].addEventListener("click",function(){
+        document.getElementsByClassName("insertButton")[0].addEventListener("click",async function(){
           let barcodeText = document.getElementsByClassName("barcodeInput")[0].value;
-          insert(barcodeText);
+          await insert(barcodeText);
           calculateTotalPrice();
         });
         document.getElementsByClassName("downloadButton")[0].addEventListener("click",function(){
@@ -201,19 +200,32 @@
         }
       };
 
-      function insert(barcodeText) {
+      async function insert(barcodeText) {
         if (barcodeText) {
           let table = document.getElementsByClassName("results")[0];
           let tr = document.createElement("tr");
           let parts = barcodeText.split("-") 
           let ISBN = parts[0];
+          let title = "";
           let addon = "";
           let price = "";
           if (parts.length = 2) { //has addon
             addon = barcodeText.split("-")[1];
             price = getPrice(addon);
           }
-          let rowValues = [ISBN,"","",price];
+          try {
+            let jsonStr = await queryDetails(ISBN);
+            console.log(jsonStr);
+            let jsonObj = JSON.parse(jsonStr);
+            console.log(jsonObj);
+            if ("title" in jsonObj) {
+              title = jsonObj["title"];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+          
+          let rowValues = [ISBN,title,price];
           for (let index = 0; index < rowValues.length; index++) {
             const value = rowValues[index];
             let td = document.createElement("td");
@@ -241,6 +253,24 @@
           total = total + price;
         }
         document.getElementById("total").innerText = total;
+      }
+
+      function queryDetails(isbn){
+        return new Promise(function (resolve, reject) {
+          let URL = 'https://openlibrary.org/isbn/'+isbn+'.json';
+          console.log(URL);
+          let xhr = new XMLHttpRequest();
+          xhr.open('GET', URL);
+          xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4){
+              resolve(xhr.responseText);
+            }
+          }
+          xhr.onerror = function(){
+            reject("error");
+          }
+          xhr.send();
+        });
       }
 
       function downloadCSV(separator = ',') {
