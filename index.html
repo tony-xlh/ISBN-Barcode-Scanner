@@ -74,6 +74,7 @@
             <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
+            <th>Price</th>
           </tr>
         </table>
       </div>
@@ -176,6 +177,11 @@
         if (frame) {  
           let results = await reader.decode(frame);
           console.log(results);
+          if (results.length > 0) {
+            const result = results[0];
+            document.getElementsByClassName("barcodeInput")[0].value = result.barcodeText;
+            stopScan();
+          }
           processing = false;
         }
       };
