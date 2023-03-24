@@ -83,6 +83,8 @@
     <script>
       let reader;
       let enhancer;
+      let interval;
+      let processing = false;
 
       window.onload = function() {
         init();
@@ -94,9 +96,11 @@
       function startScan(){
         document.getElementsByClassName("scanner")[0].classList.add("active");
         enhancer.open(true);
+        startProcessingLoop();
       }
 
       function stopScan(){
+        stopProcessingLoop();
         enhancer.close(true);
         document.getElementsByClassName("scanner")[0].classList.remove("active");
       }
@@ -125,23 +129,55 @@
       }
 
       async function useEAN13Template() {
-        await reader.initRuntimeSettingsWithString(`{
-  "FormatSpecification": {
-    "EnableAddOnCode": 1,
-    "Name": "defaultFormatParameterForAllBarcodeFormat",
-  },
-  "ImageParameter": {
-    "BarcodeFormatIds": ["BF_EAN13"],
-    "BarcodeFormatIds_2": ["BF2_NULL"],
-    "ExpectedBarcodesCount": 0,
-    "FormatSpecificationNameArray": [
-      "defaultFormatParameterForAllBarcodeFormat"
-    ],
-    "Name": "default",
-    "Timeout": 10000
-  },
-  "Version": "3.0"
-  }`);
+        await reader.initRuntimeSettingsWithString(`
+        {
+          "FormatSpecification": {
+            "EnableAddOnCode": 1,
+            "Name": "defaultFormatParameterForAllBarcodeFormat"
+          },
+          "ImageParameter": {
+            "BarcodeFormatIds": ["BF_EAN_13"],
+            "BarcodeFormatIds_2": ["BF2_NULL"],
+            "ExpectedBarcodesCount": 0,
+            "FormatSpecificationNameArray": [
+              "defaultFormatParameterForAllBarcodeFormat"
+            ],
+            "Name": "default",
+            "Timeout": 10000
+          },
+          "Version": "3.0"
+        }`);
+      };
+
+      function startProcessingLoop(isBarcode){
+        stopProcessingLoop();
+        interval = setInterval(captureAndDecode,100); // read barcodes
+      }
+
+      function stopProcessingLoop(){
+        if (interval) {
+          clearInterval(interval);
+        }
+        processing = false;
+      }
+
+      async function captureAndDecode() {
+        if (!enhancer || !reader) {
+          return
+        }
+        if (enhancer.isOpen() === false) {
+          return;
+        }
+        if (processing == true) {
+          return;
+        }
+        processing = true; // set decoding to true so that the next frame will be skipped if the decoding has not completed.
+        let frame = enhancer.getFrame();
+        if (frame) {  
+          let results = await reader.decode(frame);
+          console.log(results);
+          processing = false;
+        }
       };
     </script>
   </body>
