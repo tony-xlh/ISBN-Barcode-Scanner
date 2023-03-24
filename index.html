@@ -92,6 +92,9 @@
         document.getElementsByClassName("scanButton")[0].addEventListener("click",function(){
           startScan();
         });
+        document.getElementsByClassName("insertButton")[0].addEventListener("click",function(){
+          insert();
+        });
       }
 
       function startScan(){
@@ -185,6 +188,34 @@
           processing = false;
         }
       };
+
+      function insert() {
+        let barcodeText = document.getElementsByClassName("barcodeInput")[0].value;
+        if (barcodeText) {
+          let table = document.getElementsByClassName("results")[0];
+          let tr = document.createElement("tr");
+          let parts = barcodeText.split("-") 
+          let ISBN = parts[0];
+          let addon = "";
+          let price = "";
+          if (parts.length = 2) { //has addon
+            addon = barcodeText.split("-")[1];
+            price = getPrice(addon);
+          }
+          let rowValues = [ISBN,"","",price];
+          for (let index = 0; index < rowValues.length; index++) {
+            const value = rowValues[index];
+            let td = document.createElement("td");
+            td.innerText = value;
+            tr.appendChild(td)
+          }
+          table.appendChild(tr);
+        }
+      }
+
+      function getPrice(addon){
+        return addon;
+      }
     </script>
   </body>
 </html>
