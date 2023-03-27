@@ -101,8 +101,8 @@
         <div>Total price: <span id="total"></span></div>
         <button class="downloadButton">Download CSV</button>
         <div>
-          <button class="saveButton">Save to IndexDB</button>
-          <button class="loadButton">Load from IndexDB</button>
+          <button class="saveButton">Save to IndexedDB</button>
+          <button class="loadButton">Load from IndexedDB</button>
         </div>
       </div>
       <div class="scanner"></div>
@@ -140,10 +140,10 @@
           downloadCSV();
         });
         document.getElementsByClassName("saveButton")[0].addEventListener("click",function(){
-          saveToIndexDB();
+          saveToIndexedDB();
         });
         document.getElementsByClassName("loadButton")[0].addEventListener("click",function(){
-          loadFromIndexDB();
+          loadFromIndexedDB();
         });
       }
 
@@ -381,7 +381,7 @@
         return table;
       }
 
-      function saveToIndexDB(){
+      function saveToIndexedDB(){
         let table = getDataTable();
         localforage.setItem('ISBN', table).then(function (value) {
           alert("Saved");
@@ -390,7 +390,7 @@
         });
       }
 
-      function loadFromIndexDB(){
+      function loadFromIndexedDB(){
         localforage.getItem('ISBN').then(function (value) {
           loadDataToTable(value);
         }).catch(function(err) {
