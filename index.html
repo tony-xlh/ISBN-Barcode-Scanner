@@ -77,6 +77,7 @@
             <th>ISBN</th>
             <th>Title</th>
             <th>Price</th>
+            <th>Action</th>
           </tr>
         </table>
       </div>
@@ -232,6 +233,15 @@
             td.innerText = value;
             tr.appendChild(td)
           }
+          let td = document.createElement("td");
+          let deleteButton = document.createElement("button");
+          deleteButton.innerText = "Delete";
+          deleteButton.addEventListener("click",function(){
+            tr.parentElement.removeChild(tr);
+            calculateTotalPrice();
+          });
+          td.appendChild(deleteButton);
+          tr.appendChild(td);
           table.appendChild(tr);
         }
       }
