@@ -9,3 +9,5 @@ What can it does:
 3. Get the book's price via its add-on code and calculate the total price of scanned books.
 4. Export the data to a CSV file.
 5. Save the data into IndexedDB and load the data from IndexedDB.
+
+[Online demo](https://tony-xlh.github.io/ISBN-Barcode-Scanner/)
