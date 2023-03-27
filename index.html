@@ -359,9 +359,18 @@
       }
 
       function loadDataToTable(table){
+        resetTable();
         for (let index = 1; index < table.length; index++) {
           const row = table[index];
           insertRow(row);
+        }
+      }
+
+      function resetTable(){
+        let table = document.getElementsByClassName("results")[0];
+        while (table.getElementsByTagName("tr").length > 1) {
+          let rows = table.getElementsByTagName("tr");
+          table.removeChild(rows[rows.length-1]);
         }
       }
     </script>
