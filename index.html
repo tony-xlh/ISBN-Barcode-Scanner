@@ -226,6 +226,7 @@
       function stopProcessingLoop(){
         if (interval) {
           clearInterval(interval);
+          interval = undefined;
         }
         processing = false;
       }
