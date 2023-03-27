@@ -105,9 +105,12 @@
           startScan();
         });
         document.getElementsByClassName("insertButton")[0].addEventListener("click",async function(){
+          let btn = document.getElementsByClassName("insertButton")[0];
+          btn.innerText = "Inserting...";
           let barcodeText = document.getElementsByClassName("barcodeInput")[0].value;
           await insert(barcodeText);
           calculateTotalPrice();
+          btn.innerText = "Insert";
         });
         document.getElementsByClassName("downloadButton")[0].addEventListener("click",function(){
           downloadCSV();
