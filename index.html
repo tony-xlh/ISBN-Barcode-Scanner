@@ -170,7 +170,7 @@
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
         enhancer.on("played", (playCallbackInfo) => {
           if (interval) {
-            startScan();
+            startProcessingLoop();
           }
         });
         updateStatus("");
