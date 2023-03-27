@@ -124,6 +124,10 @@
       }
 
       function startScan(){
+        if (!enhancer || !reader) {
+          alert("Please wait for the initialization of Dynamsoft Barcode Reader");
+          return;
+        }
         document.getElementsByClassName("scanner")[0].classList.add("active");
         enhancer.open(true);
         startProcessingLoop();
