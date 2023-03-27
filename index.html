@@ -106,6 +106,16 @@
       let interval;
       let processing = false;
       const priceColumnIndex = 2;
+      
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").then(function (registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function (err) {
+          console.log('ServiceWorker registration failed: ', err);
+        }).catch(function (err) {
+          console.log(err);
+        });
+      }
 
       window.onload = function() {
         init();
