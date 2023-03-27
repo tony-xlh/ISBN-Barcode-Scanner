@@ -84,6 +84,10 @@
       <div>
         <div>Total: <span id="total"></span></div>
         <button class="downloadButton">Download CSV</button>
+        <div>
+          <button class="saveButton">Save to IndexDB</button>
+          <button class="loadButton">Load from IndexDB</button>
+        </div>
       </div>
       <div class="scanner"></div>
     </div>
@@ -106,6 +110,12 @@
         });
         document.getElementsByClassName("downloadButton")[0].addEventListener("click",function(){
           downloadCSV();
+        });
+        document.getElementsByClassName("saveButton")[0].addEventListener("click",function(){
+          saveToIndexDB();
+        });
+        document.getElementsByClassName("loadButton")[0].addEventListener("click",function(){
+          loadFromIndexDB();
         });
       }
 
@@ -312,6 +322,14 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+      }
+
+      function saveToIndexDB(){
+
+      }
+
+      function loadFromIndexDB(){
+        
       }
     </script>
   </body>
