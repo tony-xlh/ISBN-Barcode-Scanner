@@ -293,26 +293,10 @@
         });
       }
 
-      function downloadCSV(separator = ',') {
-        // Select rows from table
-        let rows = document.getElementsByTagName('tr');
-        // Construct csv
-        let csv = [];
-        for (let i = 0; i < rows.length; i++) {
-            let row = [], cols = rows[i].querySelectorAll('td, th');
-            for (let j = 0; j < cols.length - 1; j++) { //do not include the last column
-                // Clean innertext to remove multiple spaces and jumpline (break csv)
-                let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
-                // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
-                data = data.replace(/"/g, '""');
-                // Push escaped string
-                row.push('"' + data + '"');
-            }
-            csv.push(row.join(separator));
-        }
+      function downloadCSV() {
+        let csv = getDataTable(true);
         let csv_string = csv.join('\n');
         // Download it
-        
         let filename = 'out.csv';
         let link = document.createElement('a');
         link.style.display = 'none';
@@ -324,8 +308,38 @@
         document.body.removeChild(link);
       }
 
-      function saveToIndexDB(){
+      function getDataTable(toCSV, separator = ','){
+        // Select rows from table
+        let rows = document.getElementsByTagName('tr');
+        // Construct table
+        let table = [];
+        for (let i = 0; i < rows.length; i++) {
+          let row = [], cols = rows[i].querySelectorAll('td, th');
+          for (let j = 0; j < cols.length - 1; j++) { //do not include the last column
+            if (toCSV) {
+              // Clean innertext to remove multiple spaces and jumpline (break csv)
+              let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
+              // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
+              data = data.replace(/"/g, '""');
+              // Push escaped string
+              row.push('"' + data + '"');
+            }else{
+              let data = cols[j].innerText;
+              row.push(data);
+            }            
+          }
+          if (toCSV) {
+            table.push(row.join(separator));
+          }else{
+            table.push(row);
+          }
+        }
+        return table;
+      }
 
+      function saveToIndexDB(){
+        let table = getDataTable();
+        console.log(table);
       }
 
       function loadFromIndexDB(){
