@@ -393,6 +393,7 @@
       function loadFromIndexedDB(){
         localforage.getItem('ISBN').then(function (value) {
           loadDataToTable(value);
+          calculateTotalPrice();
         }).catch(function(err) {
           alert(err);
         });
