@@ -154,7 +154,6 @@
         }
         document.getElementsByClassName("scanner")[0].classList.add("active");
         enhancer.open(true);
-        startProcessingLoop();
       }
 
       function stopScan(){
@@ -169,9 +168,7 @@
         await useEAN13Template();
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
         enhancer.on("played", (playCallbackInfo) => {
-          if (interval) {
-            startProcessingLoop();
-          }
+          startProcessingLoop();
         });
         updateStatus("");
         await enhancer.setUIElement(Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL);
