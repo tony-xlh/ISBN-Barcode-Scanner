@@ -85,6 +85,7 @@
       <div>
         <label for="queryTitle">Query title:
         <input type="checkbox" id="queryTitle" checked/></label>
+        <span id="status"></span>
       </div>
       <div class="resultContainer fullwidth">
         <table class="results fullwidth">
@@ -129,12 +130,11 @@
           startScan();
         });
         document.getElementsByClassName("insertButton")[0].addEventListener("click",async function(){
-          let btn = document.getElementsByClassName("insertButton")[0];
-          btn.innerText = "Inserting...";
+          updateStatus("Inserting...");
           let barcodeText = document.getElementsByClassName("barcodeInput")[0].value;
           await insert(barcodeText);
           calculateTotalPrice();
-          btn.innerText = "Insert";
+          updateStatus("");
         });
         document.getElementsByClassName("downloadButton")[0].addEventListener("click",function(){
           downloadCSV();
@@ -164,9 +164,11 @@
       }
 
       async function init(){
+        updateStatus("Initializing...");
         reader = await Dynamsoft.DBR.BarcodeScanner.createInstance();
         await useEAN13Template();
         enhancer = await Dynamsoft.DCE.CameraEnhancer.createInstance();
+        updateStatus("");
         await enhancer.setUIElement(Dynamsoft.DCE.CameraEnhancer.defaultUIElementURL);
         setScanRegion();
         let container = document.getElementsByClassName("scanner")[0];
@@ -174,6 +176,10 @@
         document.getElementsByClassName("dce-btn-close")[0].onclick = function () {
           stopScan();
         };
+      }
+
+      function updateStatus(info){
+        document.getElementById("status").innerText = info;
       }
 
       function setScanRegion(){
