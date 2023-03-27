@@ -5,6 +5,7 @@
     <title>ISBN Barcode Scanner Sample</title>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@9.4.0-iv11082320/dist/dbr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.3.1/dist/dce.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mozilla/localForage@master/dist/localforage.js"></script>
     <style>
       .scanner {
         display: none;
@@ -213,8 +214,6 @@
 
       async function insert(barcodeText) {
         if (barcodeText) {
-          let table = document.getElementsByClassName("results")[0];
-          let tr = document.createElement("tr");
           let parts = barcodeText.split("-") 
           let ISBN = parts[0];
           let title = "";
@@ -235,25 +234,30 @@
           } catch (error) {
             console.log(error);
           }
-          
           let rowValues = [ISBN,title,price];
-          for (let index = 0; index < rowValues.length; index++) {
-            const value = rowValues[index];
-            let td = document.createElement("td");
-            td.innerText = value;
-            tr.appendChild(td)
-          }
-          let td = document.createElement("td");
-          let deleteButton = document.createElement("button");
-          deleteButton.innerText = "Delete";
-          deleteButton.addEventListener("click",function(){
-            tr.parentElement.removeChild(tr);
-            calculateTotalPrice();
-          });
-          td.appendChild(deleteButton);
-          tr.appendChild(td);
-          table.appendChild(tr);
+          insertRow(rowValues);
         }
+      }
+
+      function insertRow(rowValues){
+        let table = document.getElementsByClassName("results")[0];
+        let tr = document.createElement("tr");
+        for (let index = 0; index < rowValues.length; index++) {
+          const value = rowValues[index];
+          let td = document.createElement("td");
+          td.innerText = value;
+          tr.appendChild(td)
+        }
+        let td = document.createElement("td");
+        let deleteButton = document.createElement("button");
+        deleteButton.innerText = "Delete";
+        deleteButton.addEventListener("click",function(){
+          tr.parentElement.removeChild(tr);
+          calculateTotalPrice();
+        });
+        td.appendChild(deleteButton);
+        tr.appendChild(td);
+        table.appendChild(tr);
       }
 
       function getPrice(addon){
@@ -339,11 +343,26 @@
 
       function saveToIndexDB(){
         let table = getDataTable();
-        console.log(table);
+        localforage.setItem('ISBN', table).then(function (value) {
+          alert("Saved");
+        }).catch(function(err) {
+          alert(err);
+        });
       }
 
       function loadFromIndexDB(){
-        
+        localforage.getItem('ISBN').then(function (value) {
+          loadDataToTable(value);
+        }).catch(function(err) {
+          alert(err);
+        });
+      }
+
+      function loadDataToTable(table){
+        for (let index = 1; index < table.length; index++) {
+          const row = table[index];
+          insertRow(row);
+        }
       }
     </script>
   </body>
