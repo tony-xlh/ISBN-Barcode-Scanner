@@ -290,7 +290,7 @@
         let csv = [];
         for (let i = 0; i < rows.length; i++) {
             let row = [], cols = rows[i].querySelectorAll('td, th');
-            for (let j = 0; j < cols.length; j++) {
+            for (let j = 0; j < cols.length - 1; j++) { //do not include the last column
                 // Clean innertext to remove multiple spaces and jumpline (break csv)
                 let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
                 // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
